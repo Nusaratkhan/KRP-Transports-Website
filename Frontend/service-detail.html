@@ -1,0 +1,252 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Details</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* RESET */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, sans-serif;
+}
+
+body{
+  background:#f5f7fa;
+  color:#333;
+}
+
+/* HEADER */
+.header{
+  background:#053047;
+  color:white;
+  padding:20px;
+  text-align:center;
+}
+
+/* CONTAINER */
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+
+/* SERVICE CARD */
+.service-box{
+  background:white;
+  border-radius:16px;
+  padding:30px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.1);
+  transition:0.3s;
+}
+
+.service-box:hover{
+  transform:translateY(-5px);
+}
+
+.service-icon{
+  font-size:40px;
+  color:#053047;
+  margin-bottom:15px;
+}
+
+.service-title{
+  font-size:26px;
+  margin-bottom:10px;
+}
+
+.service-desc{
+  line-height:1.6;
+  margin-bottom:20px;
+}
+
+/* FEATURES */
+.features{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px;
+}
+
+.feature{
+  background:#eef3f7;
+  padding:15px;
+  border-radius:10px;
+  text-align:center;
+  transition:0.3s;
+}
+
+.feature:hover{
+  background:#053047;
+  color:white;
+}
+
+/* BACK BUTTON */
+.back-btn{
+  display:inline-block;
+  margin-top:20px;
+  padding:10px 20px;
+  background:#053047;
+  color:white;
+  border-radius:8px;
+  text-decoration:none;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .service-title{
+    font-size:22px;
+  }
+}
+.feature {
+  background:#eef3f7;
+  padding:15px;
+  border-radius:10px;
+  text-align:center;
+  transition:0.3s;
+  font-weight: 500;
+}
+
+/* CORE CARD HOVER EFFECT (for main page) */
+.core-card{
+  transition: all 0.3s ease;
+  cursor:pointer;
+}
+
+.core-card:hover{
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.core-card:active{
+  transform: scale(0.97);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>Service Details</h1>
+</div>
+
+<div class="container">
+
+  <div class="service-box" id="serviceContent">
+    <!-- Dynamic content will load here -->
+  </div>
+
+  <a href="services.html" class="back-btn">← Back</a>
+
+</div>
+<script>
+const params = new URLSearchParams(window.location.search);
+const service = params.get("service");
+
+const content = {
+  lpg: {
+    icon: "fa-gas-pump",
+    title: "Bulk LPG Transportation",
+    desc: "We provide safe and efficient LPG transportation services across India with strict safety protocols and certified operations.",
+    features: ["High Safety Standards","Trained Drivers","24/7 Monitoring","Nationwide Service"],
+    extra: "Our LPG transport fleet follows government safety norms and is equipped with advanced tracking systems."
+  },
+  materials: {
+    icon: "fa-truck-loading",
+    title: "Building Material Supply",
+    desc: "Reliable supply of construction materials delivered on time for residential and industrial projects.",
+    features: ["Fast Delivery","Quality Materials","Affordable Pricing","Bulk Orders"],
+    extra: "We ensure timely delivery of cement, sand, steel, and other materials directly to your site."
+  },
+  psu: {
+    icon: "fa-file-contract",
+    title: "PSU Contract Operations",
+    desc: "Handling government and PSU contracts with efficiency, compliance, and transparency.",
+    features: ["Compliance","Experienced Team","Large Scale Projects","Transparency"],
+    extra: "We have years of experience working with public sector units and large-scale logistics operations."
+  },
+  safety: {
+    icon: "fa-shield-halved",
+    title: "Safety-Driven Logistics",
+    desc: "Our logistics operations prioritize safety at every stage from loading to delivery.",
+    features: ["Safety Protocols","Regular Audits","Secure Transport","Risk Management"],
+    extra: "We conduct regular safety training and audits to ensure zero-accident operations."
+  }
+};
+
+const data = content[service] || content.lpg;
+
+let html = `
+  <div class="service-icon"><i class="fa-solid ${data.icon}"></i></div>
+  <div class="service-title">${data.title}</div>
+  <div class="service-desc">${data.desc}</div>
+
+  <div class="features">
+    ${data.features.map(f => `<div class="feature">✔ ${f}</div>`).join("")}
+  </div>
+
+  <div style="margin-top:20px; line-height:1.6;">
+    <h3 style="margin-bottom:10px;">Why Choose Us?</h3>
+    <p>${data.extra}</p>
+  </div>
+
+  <div style="margin-top:20px;">
+    <a href="Contact.html" class="back-btn">📩 Get Quote</a>
+  </div>
+`;
+
+document.getElementById("serviceContent").innerHTML = html;
+</script>
+
+<!-- <script>
+const params = new URLSearchParams(window.location.search);
+const service = params.get("service");
+
+const content = {
+  lpg: {
+    icon: "fa-gas-pump",
+    title: "Bulk LPG Transportation",
+    desc: "We provide safe and efficient LPG transportation services across regions with strict safety protocols.",
+    features: ["High Safety Standards","Trained Drivers","24/7 Monitoring","Nationwide Service"]
+  },
+  materials: {
+    icon: "fa-truck-loading",
+    title: "Building Material Supply",
+    desc: "Reliable supply of construction materials delivered on time for your projects.",
+    features: ["Fast Delivery","Quality Materials","Affordable Pricing","Bulk Orders"]
+  },
+  psu: {
+    icon: "fa-file-contract",
+    title: "PSU Contract Operations",
+    desc: "Handling government and PSU contracts with efficiency and compliance.",
+    features: ["Compliance","Experienced Team","Large Scale Projects","Transparency"]
+  },
+  safety: {
+    icon: "fa-shield-halved",
+    title: "Safety-Driven Logistics",
+    desc: "Our logistics operations prioritize safety at every stage.",
+    features: ["Safety Protocols","Regular Audits","Secure Transport","Risk Management"]
+  }
+};
+
+const data = content[service] || content.lpg;
+
+let html = `
+  <div class="service-icon"><i class="fa-solid ${data.icon}"></i></div>
+  <div class="service-title">${data.title}</div>
+  <div class="service-desc">${data.desc}</div>
+  <div class="features">
+    ${data.features.map(f => `<div class="feature">${f}</div>`).join("")}
+  </div>
+`;
+
+document.getElementById("serviceContent").innerHTML = html;
+</script> -->
+
+</body>
+</html>

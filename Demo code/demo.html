@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KRP Transports Admin Dashboard</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* ================= RESET ================= */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,body{
+    width:100%;
+    overflow-x:hidden;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f5f7fa;
+    color:#053047;
+}
+
+/* ================= LAYOUT ================= */
+.admin-dashboard{
+    display:flex;
+    min-height:100vh;
+}
+
+/* ================= MOBILE HEADER ================= */
+.mobile-header{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:64px;
+    background:#ffffff;
+    border-bottom:1px solid #ddd;
+    z-index:999;
+}
+
+.mobile-header-content{
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 16px;
+}
+
+.mobile-logo h2{
+    font-size:18px;
+    font-weight:700;
+    color:#053047;
+}
+
+.mobile-sidebar-toggle{
+    width:42px;
+    height:42px;
+    border:none;
+    background:none;
+    cursor:pointer;
+}
+
+.hamburger-line{
+    display:block;
+    width:24px;
+    height:2px;
+    background:#053047;
+    margin:5px auto;
+    transition:.3s;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar{
+    width:280px;
+    background:#ffffff;
+    border-right:1px solid #ddd;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:1000;
+    transition:.35s ease;
+}
+
+.sidebar-header{
+    padding:24px 20px;
+    background:#053047;
+    color:#fff;
+}
+
+.sidebar-logo{
+    font-size:22px;
+    font-weight:700;
+}
+
+.sidebar-subtitle{
+    font-size:13px;
+    margin-top:6px;
+    opacity:.9;
+}
+
+.nav-menu{
+    list-style:none;
+    padding:16px;
+    flex:1;
+    overflow-y:auto;
+}
+
+.nav-item{
+    margin-bottom:10px;
+}
+
+.nav-link{
+    text-decoration:none;
+    color:#053047;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 14px;
+    border-radius:10px;
+    transition:.3s;
+    font-weight:600;
+}
+
+.nav-link:hover,
+.nav-link.active{
+    background:#053047;
+    color:#fff;
+}
+
+/* Theme Toggle */
+.sidebar-theme-section{
+    padding:16px;
+    border-top:1px solid #ddd;
+}
+
+.sidebar-theme-toggle{
+    width:100%;
+    border:none;
+    background:#053047;
+    color:#fff;
+    padding:12px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+}
+
+/* ================= MAIN CONTENT ================= */
+.main-content{
+    flex:1;
+    margin-left:280px;
+    padding:30px;
+}
+
+.content-header{
+    background:#fff;
+    padding:20px;
+    border-radius:14px;
+    margin-bottom:20px;
+}
+
+.header-title{
+    font-size:24px;
+    font-weight:700;
+}
+
+.header-subtitle{
+    margin-top:8px;
+    color:#666;
+}
+
+.quick-stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+
+.stat-card{
+    background:#053047;
+    color:#fff;
+    border-radius:14px;
+    padding:22px;
+    text-align:center;
+}
+
+.stat-number{
+    font-size:28px;
+    font-weight:700;
+}
+
+.stat-label{
+    margin-top:8px;
+    font-size:14px;
+}
+
+/* ================= OVERLAY ================= */
+.mobile-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    z-index:998;
+    opacity:0;
+    visibility:hidden;
+    transition:.3s;
+}
+
+.mobile-overlay.active{
+    opacity:1;
+    visibility:visible;
+}
+
+/* ================= TABLET ================= */
+@media (max-width:1024px){
+.quick-stats{
+    grid-template-columns:repeat(2,1fr);
+}
+}
+
+/* ================= MOBILE ================= */
+@media (max-width:768px){
+
+.mobile-header{
+    display:block;
+}
+
+.sidebar{
+    width:260px;
+    max-width:82%;
+    transform:translateX(-100%);
+}
+
+.sidebar.mobile-visible{
+    transform:translateX(0);
+}
+
+.main-content{
+    margin-left:0;
+    width:100%;
+    padding:84px 14px 20px;
+}
+
+.quick-stats{
+    grid-template-columns:1fr;
+}
+
+.content-header{
+    padding:16px;
+}
+
+.header-title{
+    font-size:20px;
+}
+
+.stat-card{
+    padding:18px;
+}
+}
+</style>
+</head>
+
+<body>
+
+<!-- Overlay -->
+<div id="mobile-overlay" class="mobile-overlay"></div>
+
+<div class="admin-dashboard">
+
+    <!-- MOBILE HEADER -->
+    <header class="mobile-header">
+        <div class="mobile-header-content">
+            <div class="mobile-logo">
+                <h2>KRP Admin</h2>
+            </div>
+
+            <button id="mobile-sidebar-toggle" class="mobile-sidebar-toggle">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="sidebar-header">
+            <h2 class="sidebar-logo">KRP Admin</h2>
+            <p class="sidebar-subtitle">Transport Management System</p>
+        </div>
+
+        <ul class="nav-menu">
+
+            <li class="nav-item">
+                <a href="#" class="nav-link active">
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-user-check"></i>
+                    Attendance
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-clock-rotate-left"></i>
+                    History
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-envelope"></i>
+                    Messages
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </a>
+            </li>
+
+        </ul>
+
+        <!-- Theme Toggle -->
+        <div class="sidebar-theme-section">
+            <button class="sidebar-theme-toggle" id="theme-toggle">
+                <i class="fas fa-moon"></i>
+                Theme
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <div class="content-header">
+            <h1 class="header-title">Dashboard Overview</h1>
+            <p class="header-subtitle">
+                Welcome back! Here's your transport management overview
+            </p>
+        </div>
+
+        <div class="quick-stats">
+
+            <div class="stat-card">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Active Drivers</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-number">8</div>
+                <div class="stat-label">Present Today</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-number">4</div>
+                <div class="stat-label">On Leave</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Messages</div>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script>
+const sidebar = document.querySelector(".sidebar");
+const toggleBtn = document.getElementById("mobile-sidebar-toggle");
+const overlay = document.getElementById("mobile-overlay");
+const themeBtn = document.getElementById("theme-toggle");
+
+function openSidebar(){
+    sidebar.classList.add("mobile-visible");
+    overlay.classList.add("active");
+    document.body.style.overflow="hidden";
+}
+
+function closeSidebar(){
+    sidebar.classList.remove("mobile-visible");
+    overlay.classList.remove("active");
+    document.body.style.overflow="";
+}
+
+toggleBtn.addEventListener("click",()=>{
+    if(sidebar.classList.contains("mobile-visible")){
+        closeSidebar();
+    }else{
+        openSidebar();
+    }
+});
+
+overlay.addEventListener("click",closeSidebar);
+
+/* close after nav click mobile */
+document.querySelectorAll(".nav-link").forEach(link=>{
+    link.addEventListener("click",()=>{
+        if(window.innerWidth<=768){
+            closeSidebar();
+        }
+    });
+});
+
+/* Theme Toggle */
+themeBtn.addEventListener("click",()=>{
+    document.body.classList.toggle("dark-mode");
+
+    if(document.body.classList.contains("dark-mode")){
+        document.body.style.background="#111";
+        document.body.style.color="#fff";
+    }else{
+        document.body.style.background="#f5f7fa";
+        document.body.style.color="#053047";
+    }
+});
+
+/* Reset on resize */
+window.addEventListener("resize",()=>{
+    if(window.innerWidth>768){
+        closeSidebar();
+    }
+});
+</script>
+
+</body>
+</html>

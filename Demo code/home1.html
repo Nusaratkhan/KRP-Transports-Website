@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KRP Transports</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="update.png">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="home1.css">
+
+</head>
+<body>
+
+  <!-- Preloader -->
+  <div class="preloader">
+    <div class="dots">
+      <div></div><div></div><div></div><div></div>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <div class="navbar" id="navbar">
+    <div class="logo-title" id="logo">
+      <img src="logo.jpeg" alt="Logo">
+      <h1>KRP Transports</h1>
+    </div>
+
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+
+      <div class="contact-info">
+        <span class="phone" onclick="showPhonePopup()"><i class="fa-solid fa-phone"></i>6369629679</span>
+        <!-- <span class="email" onclick="openEmail()">
+          <a href="https://mail.google.com/mail/?view=cm&fs=1&to=krptransportsnkl@gmail.com" style="color: white; text-decoration: none;">
+            <i class="fa-regular fa-envelope"></i>krptransportsnkl@gmail.com
+          </a>
+        </span> -->
+        <span class="email">
+  <a href="mailto:krptransportsnkl@gmail.com" class="email-link">
+    <i class="fa-regular fa-envelope"></i>krptransportsnkl@gmail.com
+  </a>
+</span>
+
+      </div>
+    </div>
+  </div>
+
+ 
+<!-- Popup -->
+  <div id="phone-popup" class="popup">
+    <div class="popup-content">
+      <p>Need this number?</p>
+      <button onclick="copyNumber()">Copy</button>
+      <button onclick="closePopup()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Hero Section with Slider -->
+<section id="home" class="hero">
+  <div class="slider">
+    <div class="slides">
+      <!-- 3 Slide Images -->
+      <div class="slide"><img src="backimg.jpg" alt="Slide 1"></div>
+      <div class="slide"><img src="IMG_0769.JPG" alt="Slide 2"></div>
+      <div class="slide"><img src="backimg.JPG" alt="Slide 3"></div>
+    </div>
+    
+    <!-- Navigation Dots -->
+    <div class="dots">
+      <span class="dot active" onclick="goToSlide(0)"></span>
+      <span class="dot" onclick="goToSlide(1)"></span>
+      <span class="dot" onclick="goToSlide(2)"></span>
+    </div>
+
+    <!-- Hero Content Overlay -->
+    <div class="hero-content">
+      <h1>Welcome to KRP Transports</h1>
+      <p>Reliable LPG Transportation Across India</p>
+    </div>
+  </div>
+</section>
+
+  <section id="about-section">
+  <div class="about-wrapper">
+
+    <!-- LEFT CONTENT -->
+    <div class="about-content">
+      <h2 class="hidden">About Us</h2>
+
+      <p class="hidden">
+        Established in <strong>2002</strong>, <strong>KRP Transports</strong> is a
+        trusted logistics partner specializing in the safe and compliant
+        transportation of Bulk LPG across India. With over two decades of
+        experience, we support the nation’s energy supply chain through
+        disciplined operations and reliable service delivery.
+      </p>
+
+      <p>
+        Our commitment to safety, regulatory compliance, and operational
+        excellence has earned us long-standing partnerships with leading
+        PSU oil companies such as BPCL and IOCL.
+      </p>
+
+      <!-- FEATURES -->
+      <!-- <div class="about-features">
+
+        <div class="feature">
+          <div class="icon">
+            <i class="fa-solid fa-globe"></i>
+          </div>
+          <div>
+            <h4>Nationwide Operations</h4>
+            <p>Safety is the foundation of every operation at KRP Transports. Our PESO-approved fleet, regular safety audits, and continuous driver training programs enable us to maintain a zero-accident safety culture. We strictly follow emergency response protocols and industry best practices to ensure the secure handling of hazardous LPG cargo.</p>
+          </div>
+        </div>
+        <hr class="full-line">
+
+        <div class="feature">
+          <div class="icon">
+            <i class="fa-solid fa-clock"></i>
+          </div>
+          <div>
+            <h4>Zero-Accident Safety Culture</h4>
+            <p>Safety is the foundation of every operation at KRP Transports. Our PESO-approved fleet, regular safety audits, and continuous driver training programs enable us to maintain a zero-accident safety culture. We strictly follow emergency response protocols and industry best practices to ensure the secure handling of hazardous LPG cargo.</p>
+          </div>
+        </div>
+
+        <hr class="full-line">
+
+        <div class="feature">
+          <div class="icon">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <div>
+            <h4>Reliable & Compliant Handling</h4>
+            <p>We operate with complete adherence to government regulations and statutory requirements governing LPG transportation. Our vehicles are equipped with real-time GPS tracking and monitoring systems, ensuring transparency, route optimization, and consistent compliance throughout every stage of the transportation process.</p>
+          </div>
+        </div>
+
+
+      </div>
+    </div> -->
+
+    <!-- RIGHT IMAGE -->
+    <div class="about-image">
+      <img src="backimg.JPG" alt="KRP Transports Fleet">
+    </div>
+  </div>
+    <div class="about-features-full">
+ <div class="feature">
+    <div class="icon">
+      <i class="fa-solid fa-globe"></i>
+    </div>
+    <div>
+      <h4>Nationwide Operations</h4>
+      <p>
+        Our fleet of PESO-approved LPG tankers operates across key regions in India,
+        ensuring timely and secure deliveries through disciplined operations.
+      </p>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="feature">
+    <div class="icon">
+      <i class="fa-solid fa-clock"></i>
+    </div>
+    <div>
+      <h4>Zero-Accident Safety Culture</h4>
+      <p>
+        Safety is embedded into every operation through strict training,
+        audits, and emergency response protocols.
+      </p>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="feature">
+    <div class="icon">
+      <i class="fa-solid fa-shield-halved"></i>
+    </div>
+    <div>
+      <h4>Reliable & Compliant Handling</h4>
+      <p>
+        We strictly comply with LPG transportation regulations using
+        GPS tracking, documentation, and real-time monitoring.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+</section>
+
+  
+
+  <!-- Other Sections
+  <section id="services"><div>Our Services</div></section>
+  <section id="contact"><div>Contact Us</div></section> -->
+  <!-- Services & Contact Sections Styled Like About Us -->
+
+<!-- SERVICES SECTION -->
+<section id="services" style="background:#ffffff; color:#053047; padding:80px 15%; text-align:left; height:auto; display:block;">
+  <h2 class="hidden" style="color:#a5170d; font-size:2.5rem; margin-bottom:25px;">Our Services</h2>
+
+  <p class="hidden" style="font-size:1.1rem; line-height:1.8; margin-bottom:20px;">
+    KRP Transports specializes in the safe and efficient transportation of bulk LPG across India.
+    With a modern fleet and highly trained drivers, we ensure timely and compliant delivery of hazardous cargo.
+  </p>
+
+  <p class="hidden" style="font-size:1.1rem; line-height:1.8; margin-bottom:20px;">
+    Our operations strictly follow government safety regulations, and our vehicles are equipped with updated
+    tracking systems, safety devices, and regular maintenance checks.
+  </p>
+
+  <p class="hidden" style="font-size:1.1rem; line-height:1.8; margin-bottom:20px;">
+     We understand the critical nature of handling and transporting LPG, a hazardous and sensitive material. Our service offerings are designed to meet the unique needs of energy companies and ensure safe and timely movement across India. br
+•	LPG Transportation: Special expertise in handling and executing bulk LPG movements across India with a strong safety record. <br>
+•	Fleet Management: A comprehensive program ensuring that our vehicles remain modern, well-maintained, and compliant with all statutory regulations. <br>
+•	Safety & Compliance: 100% adherence to government norms, operational protocols, and international safety standards. <br>
+•	Timely Delivery: Efficient scheduling, real-time tracking, and route optimization for punctual deliveries. <br>
+•	Client Support & Documentation: Transparent processes with end-to-end support, including regulatory assistance, compliance documentation, and live updates. <br>
+<br>
+<br>
+<br>
+Fleet & Infrastructure
+Our strength lies in our state-of-the-art fleet and well-established infrastructure that guarantees unmatched service delivery:
+•	Modern LPG Vehicles: Every transport unit is equipped with mandatory safety features, GPS tracking, and compliance systems for secure and monitored movements.
+•	Preventive Maintenance: Vehicles undergo regular checks, upkeep, and performance assessments to ensure reliability under challenging operating conditions.
+•	Trained Workforce: Drivers and staff are extensively trained in specialized LPG handling, emergency protocols, and risk management.
+•	Operational Efficiency: Our route optimization strategies reduce delays, increase fuel efficiency, and ensure timely customer deliveries.
+•	Nationwide Coverage: With efficient coordination hubs and widespread route networks, we deliver across multiple regions seamlessly.
+  </p>
+</section>
+
+<!-- CONTACT US SECTION -->
+<section id="contact" style="background:#ffffff; color:#053047; padding:80px 15%; text-align:left; height:auto; display:block;">
+  <h2 class="hidden" style="color:#a5170d; font-size:2.5rem; margin-bottom:25px;">Contact Us</h2>
+
+  <p class="hidden" style="font-size:1.1rem; line-height:1.8; margin-bottom:20px;">
+    We would love to hear from you. For inquiries, transport requests, or partnership opportunities,
+    feel free to reach out to us anytime.
+  </p>
+
+  <p class="hidden" style="font-size:1.1rem; line-height:1.8; margin-bottom:10px;">
+    <strong>Phone:</strong> 63696 29679
+  </p>
+
+  <p class="hidden" style="font-size:1.1rem; line-height:1.8; margin-bottom:10px;">
+    <strong>Email:</strong> krptransportsnkl@gmail.com
+  </p>
+
+  <p class="hidden" style="font-size:1.1rem; line-height:1.8; margin-bottom:20px;">
+    <strong>Address:</strong><br>
+    KRP Transports,<br>
+    Namakkal, Tamil Nadu, India
+  </p>
+</section>
+
+
+  <script>
+    // Preloader
+    window.addEventListener("load", function() {
+      document.querySelector(".preloader").style.display = "none";
+    });
+
+    // Phone Popup
+    function showPhonePopup() {
+      document.getElementById('phone-popup').style.display = 'flex';
+    }
+    function closePopup() {
+      document.getElementById('phone-popup').style.display = 'none';
+    }
+    function copyNumber() {
+      navigator.clipboard.writeText('7200240947')
+        .then(() => {
+          alert('Number copied to clipboard!');
+          closePopup();
+        })
+        .catch(err => {
+          alert('Failed to copy number.');
+        });
+    }
+    function openEmail() {
+      window.location.href = "mailto:krptransportsnkl@gmail.com";
+    }
+
+    // Scroll-triggered animation for About Us
+    const hiddenElements = document.querySelectorAll('.hidden');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+        } else {
+          entry.target.classList.remove('show'); // reset when out of view
+        }
+      });
+    }, { threshold: 0.2 });
+
+    hiddenElements.forEach(el => observer.observe(el));
+
+    // Navbar shrink on scroll
+    window.addEventListener("scroll", function() {
+      const navbar = document.getElementById("navbar");
+      if (window.scrollY > 50) {
+        navbar.classList.add("shrink");
+      } else {
+        navbar.classList.remove("shrink");
+      }
+    });
+    // Slider Logic
+// let currentSlide = 0;
+// const slides = document.querySelector(".slides");
+// const dots = document.querySelectorAll(".dot");
+
+// function goToSlide(n) {
+//   currentSlide = n;
+//   slides.style.transform = `translateX(-${n * 100}%)`;
+//   updateDots();
+// }
+
+// function updateDots() {
+//   dots.forEach(dot => dot.classList.remove("active"));
+//   dots[currentSlide].classList.add("active");
+// }
+
+// // Auto slide every 5s
+// setInterval(() => {
+//   currentSlide = (currentSlide + 1) % 3; // 3 slides
+//   goToSlide(currentSlide);
+// }, 5000);
+
+// // Initialize
+// goToSlide(0);
+const slides = document.querySelector(".slides");
+const dots = document.querySelectorAll(".dot");
+
+let currentIndex = 0;
+let slideInterval;
+const totalSlides = dots.length;
+const intervalTime = 5000; // 5 seconds
+
+// Function to show slide
+function showSlide(index) {
+  currentIndex = index;
+  slides.style.transform = `translateX(-${index * 100}%)`;
+  
+  // update active dot
+  dots.forEach(dot => dot.classList.remove("active"));
+  dots[index].classList.add("active");
+
+  // reset timer when user clicks dot
+  resetInterval();
+}
+
+// Function to go to next slide (always forward)
+function nextSlide() {
+  currentIndex = (currentIndex + 1) % totalSlides;
+  showSlide(currentIndex);
+}
+
+// Auto-slide interval
+function startInterval() {
+  slideInterval = setInterval(nextSlide, intervalTime);
+}
+
+function resetInterval() {
+  clearInterval(slideInterval);
+  startInterval();
+}
+
+// Add click listeners to dots
+dots.forEach((dot, index) => {
+  dot.addEventListener("click", () => {
+    showSlide(index);
+  });
+});
+
+// Start auto slideshow
+startInterval();
+
+    
+  </script>
+</body>
+</html>
+
+  </div>
+</div>

@@ -1,0 +1,2132 @@
+<!DOCTYPE html>
+<html lang="en">
+<script>
+// Check for valid JWT token
+function validateJWTToken() {
+    const token = localStorage.getItem("adminToken");
+    const isLoggedIn = localStorage.getItem("adminLoggedIn");
+    
+    if (!token || isLoggedIn !== "true") {
+        console.log('No token or not logged in, redirecting to login');
+        window.location.replace("loginpage.html");
+        return;
+    }
+    
+    console.log('Token found, logged in, proceeding to dashboard');
+    
+}
+
+// Run validation on page load
+validateJWTToken();
+</script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - KRP Transports</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="update.png">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="homecss.css">
+    <link rel="stylesheet" href="admin-dashboard.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+    <!-- Mobile Overlay -->
+    <div id="mobile-overlay" class="mobile-overlay"></div>
+
+    <div class="admin-dashboard">
+        <!-- Mobile Header -->
+        <header class="mobile-header">
+            <div class="mobile-header-content">
+                <!-- Theme Toggle -->
+                <button class="theme-toggle mobile-theme-toggle" aria-label="Toggle dark/light mode">
+                    <span class="theme-icon">
+                        <!-- Moon Icon (Light Mode) -->
+                        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                        <!-- Sun Icon (Dark Mode) -->
+                        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                </button>
+                
+                <div class="mobile-logo">
+                    <h2>KRP Admin</h2>
+                </div>
+                
+                <button id="mobile-sidebar-toggle" class="mobile-sidebar-toggle" aria-label="Toggle sidebar menu">
+                    <span class="hamburger-icon">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </span>
+                </button>
+            </div>
+        </header>
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <!-- Desktop Theme Toggle -->
+            <button class="theme-toggle desktop-theme-toggle" aria-label="Toggle dark/light mode">
+                <span class="theme-icon">
+                    <!-- Moon Icon (Light Mode) -->
+                    <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <!-- Sun Icon (Dark Mode) -->
+                    <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </span>
+            </button>
+
+            <div class="sidebar-header">
+                <h2 class="sidebar-logo">KRP Admin</h2>
+                <p class="sidebar-subtitle">Transport Management System</p>
+            </div>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active" onclick="showSection('dashboard')">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="showSection('attendance')">
+                            <i class="fas fa-user-clock"></i>
+                            Attendance
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="showSection('history')">
+                            <i class="fas fa-history"></i>
+                            History
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="showSection('documents')">
+                            <i class="fas fa-file-alt"></i>
+                            Documents & Renewals
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="showSection('messages')">
+                            <i class="fas fa-envelope"></i>
+                            Messages
+                            <span class="badge" id="sidebarMessagesBadge">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+                    </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section">
+                <div class="content-header">
+                    <h1 class="header-title">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard Overview
+                    </h1>
+                    <p class="header-subtitle">Welcome back! Here's your transport management overview</p>
+                </div>
+
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="activeDriversCount">12</div>
+                        <div class="stat-label">Active Drivers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="presentTodayCount">8</div>
+                        <div class="stat-label">Present Today</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="onLeaveCount">4</div>
+                        <div class="stat-label">On Leave</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="newMessagesCount">3</div>
+                        <div class="stat-label">New Messages</div>
+                    </div>
+                </div>
+
+                <!-- Driver Management Section -->
+                <div class="driver-management-section">
+                    <div class="section-header">
+                        <h3 class="section-title">Driver Management</h3>
+                        <button class="btn btn-primary" onclick="openAddDriverModal()">
+                            <i class="fas fa-plus"></i>
+                            Add Driver
+                        </button>
+                    </div>
+                    
+                    <div class="driver-list-container">
+                        <div class="table-container">
+                            <table class="driver-table">
+                                <thead>
+                                    <tr>
+                                        <th>Driver Name</th>
+                                        <th>Phone Number</th>
+                                        <th>License Number</th>
+                                        <th>Vehicle Number</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="driverTableBody">
+                                    <!-- Drivers will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Attendance Section -->
+            <section id="attendance-section" class="content-section" style="display: none;">
+                <div class="content-header">
+                    <h1 class="header-title">
+                        <i class="fas fa-user-clock"></i>
+                        Attendance Management
+                    </h1>
+                    <p class="header-subtitle">Mark and manage employee attendance</p>
+                </div>
+
+                <!-- Employee List for Attendance -->
+                <div class="attendance-container">
+                    <div class="attendance-form-section">
+                        <h3 class="section-title">Mark Today's Attendance</h3>
+                        <div class="employee-list" id="employeeList">
+                            <!-- Employees will be populated here -->
+                        </div>
+                        <div class="attendance-actions">
+                            <button class="btn btn-primary" onclick="saveAttendance()">
+                                <i class="fas fa-save"></i>
+                                Save Attendance
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearAttendance()">
+                                <i class="fas fa-undo"></i>
+                                Clear Selection
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Attendance History -->
+                    <div class="attendance-history-section">
+                        <h3 class="section-title">Attendance History</h3>
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="attendanceHistoryBody">
+                                    <!-- History will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- History Section -->
+            <section id="history-section" class="content-section" style="display: none;">
+                <div class="content-header">
+                    <h1 class="header-title">
+                        <i class="fas fa-history"></i>
+                        Attendance History
+                    </h1>
+                    <p class="header-subtitle">View and filter attendance records</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Filter by Date Range</label>
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <input type="date" class="form-input" id="startDate" style="flex: 1;">
+                        <span style="color: var(--secondary-text, #666666);">to</span>
+                        <input type="date" class="form-input" id="endDate" style="flex: 1;">
+                        <button class="btn btn-secondary" onclick="filterHistory()">
+                            <i class="fas fa-filter"></i>
+                            Filter
+                        </button>
+                        <button class="btn btn-secondary" onclick="downloadExcel()">
+                            <i class="fas fa-file-excel"></i>
+                            Download Excel
+                        </button>
+                    </div>
+                </div>
+
+                <div class="attendance-table">
+                    <div class="table-header">
+                        <h3>Attendance Records</h3>
+                    </div>
+                    <div class="table-container">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Driver Name</th>
+                                <th>Status</th>
+                                <th>Time</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <!-- Dynamic content will be populated here -->
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Documents & Renewals Section -->
+            <section id="documents-section" class="content-section" style="display: none;">
+                <div class="content-header">
+                    <h1 class="header-title">
+                        <i class="fas fa-file-alt"></i>
+                        Documents & Renewals
+                    </h1>
+                    <p class="header-subtitle">Manage driver licenses and vehicle RC renewals</p>
+                    <!-- <button onclick="testDocumentsSection()" style="background: #28a745; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;">Test Section</button> -->
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="tab-navigation">
+                    <button class="tab-btn active" onclick="switchTab('license-renewals')">
+                        <i class="fas fa-id-card"></i>
+                        Driver License Renewals
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('rc-renewals')">
+                        <i class="fas fa-car"></i>
+                        Vehicle Doc Renewals
+                    </button>
+                </div>
+
+                <!-- Driver License Renewals Tab -->
+                <div id="license-renewals-tab" class="tab-content active">
+                    <div class="section-header">
+                        <h3 class="section-title">Driver License Renewals</h3>
+                        <button class="btn btn-primary" onclick="openLicenseModal()">
+                            <i class="fas fa-plus"></i>
+                            Add License Renewal
+                        </button>
+                    </div>
+                    
+                    <div class="renewals-list-container">
+                        <div class="table-container">
+                            <table class="renewals-table">
+                                <thead>
+                                    <tr>
+                                        <th>Driver Name</th>
+                                        <th>License Number</th>
+                                        <th>Expiry Date</th>
+                                        <th>Days Left</th>
+                                        <th>Status</th>
+                                        <th>License File</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="licenseTableBody">
+                                    <tr><td colspan="7" style="text-align: center;">Loading license renewals...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehicle RC Renewals Tab -->
+                <div id="rc-renewals-tab" class="tab-content">
+                    <div class="section-header">
+                        <h3 class="section-title">Vehicle RC Renewals</h3>
+                        <button class="btn btn-primary" onclick="openRCModal()">
+                            <i class="fas fa-plus"></i>
+                            Add RC Renewal
+                        </button>
+                    </div>
+                    
+                    <div class="renewals-list-container">
+                        <div class="table-container">
+                            <table class="renewals-table">
+                                <thead>
+                                    <tr>
+                                        <th>Vehicle Number</th>
+                                        <th>RC Number</th>
+                                        <th>Expiry Date</th>
+                                        <th>Days Left</th>
+                                        <th>Status</th>
+                                        <th>File</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rcTableBody">
+                                    <tr><td colspan="7" style="text-align: center;">Loading RC renewals...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Messages Section -->
+            <section id="messages-section" class="content-section" style="display: none;">
+                <div class="content-header">
+                    <h1 class="header-title">
+                        <i class="fas fa-envelope"></i>
+                        Client Messages
+                        <span class="badge" id="headerMessagesBadge">0 New</span>
+                    </h1>
+                    <p class="header-subtitle">Messages received from contact form</p>
+                </div>
+
+                <div class="messages-container" id="messagesContainer">
+                    <!-- Messages will be loaded dynamically from MongoDB -->
+                    <div id="noMessagesMessage" style="display: none; text-align: center; padding: 40px; color: var(--secondary-text);">
+                        <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+                        <p>No messages received yet</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Driver Modal -->
+    <div id="driverModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="driverModalTitle">Add Driver</h3>
+                <button class="modal-close" onclick="closeDriverModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="driverForm">
+                    <input type="hidden" id="driverId">
+                    <div class="form-group">
+                        <label class="form-label">Driver Name</label>
+                        <input type="text" class="form-input" id="driverName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" class="form-input" id="driverPhoneNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">License Number</label>
+                        <input type="text" class="form-input" id="driverLicenseNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Vehicle Number</label>
+                        <input type="text" class="form-input" id="driverVehicleNumber" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeDriverModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveDriver()">Save Driver</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Confirm Delete</h3>
+                <button class="modal-close" onclick="closeDeleteModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this driver? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- License Renewal Modal -->
+    <div id="licenseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="licenseModalTitle">Add License Renewal</h3>
+                <button class="modal-close" onclick="closeLicenseModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="licenseForm">
+                    <input type="hidden" id="licenseId">
+                    <div class="form-group">
+                        <label class="form-label">Driver Name</label>
+                        <select class="form-input" id="licenseDriverId" required>
+                            <option value="">Select Driver</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">License Number</label>
+                        <input type="text" class="form-input" id="licenseNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Expiry Date</label>
+                        <input type="date" class="form-input" id="licenseExpiryDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Upload License File</label>
+                        <input type="file" class="form-input" id="licenseFile" accept=".pdf,.jpg,.jpeg,.png">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeLicenseModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveLicenseRenewal()">Save License</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RC Renewal Modal -->
+    <div id="rcModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="rcModalTitle">Add RC Renewal</h3>
+                <button class="modal-close" onclick="closeRCModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="rcForm">
+                    <input type="hidden" id="rcId">
+                    <div class="form-group">
+                        <label class="form-label">Vehicle Number</label>
+                        <input type="text" class="form-input" id="rcVehicleNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">RC Number</label>
+                        <input type="text" class="form-input" id="rcNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Expiry Date</label>
+                        <input type="date" class="form-input" id="rcExpiryDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Upload RC File</label>
+                        <input type="file" class="form-input" id="rcFile" accept=".pdf,.jpg,.jpeg,.png">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeRCModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveRCRenewal()">Save RC</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle Functionality
+        const themeToggles = document.querySelectorAll('.theme-toggle');
+        const body = document.body;
+
+        function updateThemeIcons(isDarkMode) {
+            const moonIcons = document.querySelectorAll('.icon-sun');
+            const sunIcons = document.querySelectorAll('.icon-moon');
+            
+            moonIcons.forEach(icon => {
+                icon.style.display = isDarkMode ? 'block' : 'none';
+            });
+            
+            sunIcons.forEach(icon => {
+                icon.style.display = isDarkMode ? 'none' : 'block';
+            });
+        }
+
+        function toggleTheme() {
+            const isDarkMode = body.classList.toggle('dark-mode');
+            
+            // Update all theme toggle buttons
+            updateThemeIcons(isDarkMode);
+            
+            // Save theme preference
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        }
+
+        // Load saved theme or default to light mode
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            updateThemeIcons(true);
+        } else {
+            updateThemeIcons(false);
+        }
+
+        // Add event listeners to all theme toggle buttons
+        themeToggles.forEach(toggle => {
+            toggle.addEventListener('click', toggleTheme);
+        });
+
+        // Section Navigation
+        async function showSection(sectionName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // Remove active class from all nav links
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Show selected section
+            const selectedSection = document.getElementById(sectionName + '-section');
+            if (selectedSection) {
+                selectedSection.style.display = 'block';
+            }
+
+            // Add active class to selected nav link
+            const activeLink = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+
+            // Initialize attendance when attendance section is shown
+            if (sectionName === 'attendance') {
+                await initializeAttendance();
+            }
+
+            // Fetch messages when messages section is shown
+            if (sectionName === 'messages') {
+                await fetchMessages();
+            }
+
+            // Initialize history when history section is shown
+            if (sectionName === 'history') {
+                loadHistoryData();
+            }
+
+            // Initialize documents when documents section is shown
+            if (sectionName === 'documents') {
+                console.log('Documents section selected, calling showDocumentsSection...');
+                showDocumentsSection();
+            }
+
+            // Handle logout
+            if (sectionName === 'logout') {
+                if (confirm('Are you sure you want to logout?')) {
+                    alert('Logging out...');
+                    // In real app, this would redirect to login page
+                }
+            }
+        }
+
+        // Attendance Management Functions
+        let drivers = [];
+        let attendanceData = {};
+
+        // Initialize attendance when attendance section is shown
+        async function initializeAttendance() {
+            await loadDrivers();
+            renderEmployeeList();
+            loadAttendanceHistory();
+        }
+
+        // Load drivers from backend
+        async function loadDrivers() {
+            try {
+                const response = await fetch('http://localhost:5000/active-drivers');
+                const result = await response.json();
+                
+                if (result.success) {
+                    drivers = result.data;
+                } else {
+                    console.error('Failed to load drivers:', result.message);
+                }
+            } catch (error) {
+                console.error('Error loading drivers:', error);
+            }
+        }
+
+        // Render employee list
+        function renderEmployeeList() {
+            const employeeList = document.getElementById('employeeList');
+            employeeList.innerHTML = '';
+
+            drivers.forEach(driver => {
+                const employeeItem = document.createElement('div');
+                employeeItem.className = 'employee-item';
+                employeeItem.innerHTML = `
+                    <div class="employee-info">
+                        <div class="employee-avatar">${driver.name.charAt(0)}</div>
+                        <div class="employee-name">${driver.name}</div>
+                    </div>
+                    <div class="attendance-buttons">
+                        <button class="attendance-btn present" data-employee-id="${driver._id}" data-status="present" onclick="markAttendanceStatus('${driver._id}', 'present')">Present</button>
+                        <button class="attendance-btn absent" data-employee-id="${driver._id}" data-status="absent" onclick="markAttendanceStatus('${driver._id}', 'absent')">Absent</button>
+                    </div>
+                `;
+                employeeList.appendChild(employeeItem);
+            });
+        }
+
+        // Mark attendance status for employee
+        function markAttendanceStatus(employeeId, status) {
+            attendanceData[employeeId] = status;
+            
+            // Update button states
+            const employeeButtons = document.querySelectorAll(`[data-employee-id="${employeeId}"]`);
+            employeeButtons.forEach(button => {
+                button.classList.remove('present', 'absent');
+                if (button.dataset.status === status) {
+                    button.classList.add(status);
+                }
+            });
+        }
+
+        // Save attendance to backend
+        async function saveAttendance() {
+            if (Object.keys(attendanceData).length === 0) {
+                alert('Please mark attendance for at least one driver');
+                return;
+            }
+
+            try {
+                const attendancePromises = Object.entries(attendanceData).map(([driverId, status]) => {
+                    const driver = drivers.find(d => d._id === driverId);
+                    return fetch('http://localhost:5000/attendance', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            driverId: driver._id, 
+                            name: driver.name, 
+                            status, 
+                            date: new Date().toISOString().split('T')[0] 
+                        })
+                    });
+                });
+
+                const results = await Promise.all(attendancePromises);
+                
+                if (results.every(response => response.ok)) {
+                    alert('Attendance saved successfully!');
+                    attendanceData = {};
+                    renderEmployeeList();
+                    loadAttendanceHistory();
+                    // Refresh dashboard stats
+                    fetchDashboardStats();
+                } else {
+                    alert('Error saving attendance. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error saving attendance:', error);
+                alert('Server error. Please try again.');
+            }
+        }
+
+        // Clear attendance selection
+        function clearAttendance() {
+            attendanceData = {};
+            renderEmployeeList();
+        }
+
+        // Load attendance history from backend
+        async function loadAttendanceHistory() {
+            try {
+                const response = await fetch('http://localhost:5000/attendance');
+                const result = await response.json();
+                
+                const historyBody = document.getElementById('attendanceHistoryBody');
+                historyBody.innerHTML = '';
+
+                if (!result.success || !result.data || result.data.length === 0) {
+                    historyBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Attendance is not marked yet</td></tr>';
+                    return;
+                }
+
+                const history = result.data;
+                // Get today's date in YYYY-MM-DD format
+                const today = new Date().toISOString().split('T')[0];
+                
+                // Filter for today's attendance records only
+                const todayAttendance = history.filter(record => {
+                    const recordDate = new Date(record.date).toISOString().split('T')[0];
+                    return recordDate === today;
+                });
+
+                if (todayAttendance.length === 0) {
+                    historyBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Attendance is not marked yet</td></tr>';
+                    return;
+                }
+
+                // Sort today's attendance by creation time (newest first)
+                todayAttendance.sort((a, b) => {
+                    const timeA = new Date(a.createdAt);
+                    const timeB = new Date(b.createdAt);
+                    return timeB - timeA; // Descending order by time
+                });
+                
+                todayAttendance.forEach(record => {
+                    const row = document.createElement('tr');
+                    // Use driverSnapshot for historical data if driver was deleted, otherwise use current name
+                    const displayName = record.driverSnapshot ? record.driverSnapshot.name : record.name;
+                    const markingTime = formatTime(record.createdAt);
+                    
+                    row.innerHTML = `
+                        <td>${displayName}</td>
+                        <td><span class="status-badge ${record.status.toLowerCase()}">${record.status}</span></td>
+                        <td>${new Date(record.date).toLocaleDateString()}</td>
+                        <td>${markingTime}</td>
+                    `;
+                    historyBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading attendance history:', error);
+                const historyBody = document.getElementById('attendanceHistoryBody');
+                historyBody.innerHTML = '<tr><td colspan="3" style="text-align: center;">Error loading attendance history</td></tr>';
+            }
+        }
+
+        // Load drivers for attendance dropdown
+        async function loadDriversForAttendance() {
+            try {
+                const response = await fetch('http://localhost:5000/active-drivers');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const select = document.getElementById('licenseDriverId');
+                    select.innerHTML = '<option value="">Select Driver</option>';
+                    
+                    result.data.forEach(driver => {
+                        const option = document.createElement('option');
+                        option.value = driver._id;
+                        option.textContent = driver.name;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading drivers:', error);
+            }
+        }
+
+        // Load history data from backend
+        async function loadHistoryData() {
+            try {
+                // Load drivers for attendance page
+                await loadDrivers();
+                renderEmployeeList();
+                
+                const response = await fetch('http://localhost:5000/attendance');
+                const result = await response.json();
+                
+                const historyBody = document.getElementById('historyTableBody');
+                historyBody.innerHTML = '';
+
+                if (!result.success || !result.data || result.data.length === 0) {
+                    historyBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No attendance history found</td></tr>';
+                    return;
+                }
+
+                const history = result.data;
+                // Sort by date in descending order (newest first)
+                history.sort((a, b) => {
+                    const dateA = new Date(a.date);
+                    const dateB = new Date(b.date);
+                    return dateB - dateA; // Descending order
+                });
+                
+                history.forEach(record => {
+                    const row = document.createElement('tr');
+                    const markingTime = formatTime(record.createdAt);
+                    
+                    // Use driverSnapshot for historical data if driver was deleted, otherwise use current name
+                    const displayName = record.driverSnapshot ? record.driverSnapshot.name : record.name;
+                    
+                    row.innerHTML = `
+                        <td>${new Date(record.date).toLocaleDateString()}</td>
+                        <td>${displayName}</td>
+                        <td><span class="status-badge status-${record.status.toLowerCase()}">${record.status}</span></td>
+                        <td>${markingTime}</td>
+                        <td>Marked from dashboard</td>
+                    `;
+                    historyBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading history data:', error);
+                const historyBody = document.getElementById('historyTableBody');
+                historyBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Error loading attendance history</td></tr>';
+            }
+        }
+
+        // History Filter Function
+        function filterHistory() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            if (!startDate || !endDate) {
+                alert('Please select both start and end dates');
+                return;
+            }
+
+            // Filter the displayed table rows
+            const rows = document.querySelectorAll('#historyTableBody tr');
+            let hasVisibleRows = false;
+
+            rows.forEach(row => {
+                const dateCell = row.cells[0].textContent;
+                const rowDate = new Date(dateCell).toISOString().split('T')[0];
+                
+                if (rowDate >= startDate && rowDate <= endDate) {
+                    row.style.display = '';
+                    hasVisibleRows = true;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            if (!hasVisibleRows) {
+                const historyBody = document.getElementById('historyTableBody');
+                historyBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No records found in selected date range</td></tr>';
+            }
+        }
+
+        // Download Excel Function
+        async function downloadExcel() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            if (!startDate || !endDate) {
+                alert('Please select both start and end dates');
+                return;
+            }
+
+            try {
+                // Fetch attendance data for the selected date range
+                const response = await fetch(`http://localhost:5000/attendance?startDate=${startDate}&endDate=${endDate}`);
+                const result = await response.json();
+
+                if (!result.success || result.data.length === 0) {
+                    alert('No attendance records found.');
+                    return;
+                }
+
+                // Filter data for the selected date range
+                const filteredData = result.data.filter(record => {
+                    const recordDate = new Date(record.date).toISOString().split('T')[0];
+                    return recordDate >= startDate && recordDate <= endDate;
+                });
+
+                if (filteredData.length === 0) {
+                    alert('No attendance records found for the selected date range.');
+                    return;
+                }
+
+                // Create Excel data
+                const excelData = filteredData.map(record => ({
+                    'Date': new Date(record.date).toLocaleDateString(),
+                    'Driver Name': record.name,
+                    'Phone Number': record.driverSnapshot?.phoneNumber || record.phoneNumber || 'N/A',
+                    'License Number': record.driverSnapshot?.licenseNumber || record.licenseNumber || 'N/A',
+                    'Vehicle Number': record.driverSnapshot?.vehicleNumber || record.vehicleNumber || 'N/A',
+                    'Status': record.status,
+                    'Time': new Date(record.createdAt).toLocaleTimeString()
+                }));
+
+                // Generate Excel file
+                generateExcelFile(excelData, `attendance-history-${startDate}-to-${endDate}.xlsx`);
+
+            } catch (error) {
+                console.error('Error downloading Excel:', error);
+                alert('Error downloading Excel file. Please try again.');
+            }
+        }
+
+        // Generate Excel File Function
+        function generateExcelFile(data, filename) {
+            try {
+                // Create workbook
+                const wb = XLSX.utils.book_new();
+                
+                // Create worksheet from data
+                const ws = XLSX.utils.json_to_sheet(data);
+                
+                // Add worksheet to workbook
+                XLSX.utils.book_append_sheet(wb, ws, "Attendance");
+                
+                // Write file
+                XLSX.writeFile(wb, filename);
+                
+            } catch (error) {
+                console.error('Error generating Excel file:', error);
+                alert('Error generating Excel file. Please try again.');
+            }
+        }
+
+        // Mobile Sidebar Toggle Functionality
+        const mobileSidebarToggle = document.getElementById('mobile-sidebar-toggle');
+        const mobileOverlay = document.getElementById('mobile-overlay');
+        const sidebar = document.querySelector('.sidebar');
+
+        function toggleMobileSidebar() {
+            sidebar.classList.toggle('mobile-visible');
+            mobileOverlay.classList.toggle('active');
+            mobileSidebarToggle.classList.toggle('active');
+            
+            // Prevent body scroll when sidebar is open
+            if (sidebar.classList.contains('mobile-visible')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+
+        function closeMobileSidebar() {
+            sidebar.classList.remove('mobile-visible');
+            mobileOverlay.classList.remove('active');
+            mobileSidebarToggle.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Event listeners for mobile sidebar
+        if (mobileSidebarToggle) {
+            mobileSidebarToggle.addEventListener('click', toggleMobileSidebar);
+        }
+
+        if (mobileOverlay) {
+            mobileOverlay.addEventListener('click', closeMobileSidebar);
+        }
+
+        // Close sidebar when clicking on navigation links (mobile only)
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    closeMobileSidebar();
+                }
+            });
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                closeMobileSidebar();
+            }
+        });
+
+        // Logout function
+        function logout() {
+            // Clear authentication data
+            localStorage.removeItem("adminLoggedIn");
+            localStorage.removeItem("adminUser");
+            
+            // Redirect to login page
+            window.location.href = "loginpage.html";
+        }
+
+        // Fetch dashboard statistics from backend
+        async function fetchDashboardStats() {
+            try {
+                const token = localStorage.getItem('adminToken');
+                const response = await fetch('http://localhost:5000/dashboard-stats', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    const stats = result.data;
+                    console.log("Dashboard stats received:", stats);
+                    console.log("New messages count:", stats.newMessages);
+                    
+                    // Update stat cards with dynamic data
+                    document.getElementById('activeDriversCount').textContent = stats.activeDrivers;
+                    document.getElementById('presentTodayCount').textContent = stats.presentToday;
+                    document.getElementById('onLeaveCount').textContent = stats.onLeave;
+                    // Update dashboard stats to use newMessages from backend
+                    document.getElementById('newMessagesCount').textContent = stats.newMessages;
+                    
+                    // Update message badges
+                    updateMessageBadges(stats.newMessages);
+                    console.log("Message badges updated with count:", stats.newMessages);
+                } else {
+                    console.error('Failed to fetch dashboard stats:', result.message);
+                }
+            } catch (error) {
+                console.error('Error fetching dashboard stats:', error);
+            }
+        }
+
+        // Driver Management Functions
+        let driverToDelete = null;
+
+        // Fetch all drivers
+        async function fetchDrivers() {
+            try {
+                const response = await fetch('http://localhost:5000/drivers');
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayDrivers(result.data);
+                } else {
+                    console.error('Failed to fetch drivers:', result.message);
+                }
+            } catch (error) {
+                console.error('Error fetching drivers:', error);
+            }
+        }
+
+        // Display drivers in table
+        function displayDrivers(drivers) {
+            const driverTableBody = document.getElementById('driverTableBody');
+            driverTableBody.innerHTML = '';
+
+            if (drivers.length === 0) {
+                driverTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No drivers found</td></tr>';
+                return;
+            }
+
+            drivers.forEach(driver => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${driver.name}</td>
+                    <td>${driver.phoneNumber}</td>
+                    <td>${driver.licenseNumber}</td>
+                    <td>${driver.vehicleNumber}</td>
+                    <td>
+                        <div class="driver-actions">
+                            <button class="btn btn-edit" onclick="editDriver('${driver._id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-delete" onclick="deleteDriver('${driver._id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </td>
+                `;
+                driverTableBody.appendChild(row);
+            });
+        }
+
+        // Open Add Driver Modal
+        function openAddDriverModal() {
+            document.getElementById('driverModalTitle').textContent = 'Add Driver';
+            document.getElementById('driverForm').reset();
+            document.getElementById('driverId').value = '';
+            document.getElementById('driverModal').classList.add('active');
+        }
+
+        // Open Edit Driver Modal
+        async function editDriver(driverId) {
+            try {
+                const response = await fetch(`http://localhost:5000/drivers`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    const driver = result.data.find(d => d._id === driverId);
+                    if (driver) {
+                        document.getElementById('driverModalTitle').textContent = 'Edit Driver';
+                        document.getElementById('driverId').value = driver._id;
+                        document.getElementById('driverName').value = driver.name;
+                        document.getElementById('driverPhoneNumber').value = driver.phoneNumber;
+                        document.getElementById('driverLicenseNumber').value = driver.licenseNumber;
+                        document.getElementById('driverVehicleNumber').value = driver.vehicleNumber;
+                        document.getElementById('driverModal').classList.add('active');
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching driver:', error);
+            }
+        }
+
+        // Close Driver Modal
+        function closeDriverModal() {
+            document.getElementById('driverModal').classList.remove('active');
+        }
+
+        // Save Driver (Create or Update)
+        async function saveDriver() {
+            const driverId = document.getElementById('driverId').value;
+            const name = document.getElementById('driverName').value;
+            const phoneNumber = document.getElementById('driverPhoneNumber').value;
+            const licenseNumber = document.getElementById('driverLicenseNumber').value;
+            const vehicleNumber = document.getElementById('driverVehicleNumber').value;
+
+            if (!name || !phoneNumber || !licenseNumber || !vehicleNumber) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            try {
+                const url = driverId ? `http://localhost:5000/drivers/${driverId}` : 'http://localhost:5000/drivers';
+                const method = driverId ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, phoneNumber, licenseNumber, vehicleNumber })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(driverId ? 'Driver updated successfully!' : 'Driver created successfully!');
+                    closeDriverModal();
+                    fetchDrivers();
+                    // Refresh attendance list to show new/updated driver
+                    loadDrivers();
+                    renderEmployeeList();
+                    // Refresh dashboard stats
+                    fetchDashboardStats();
+                } else {
+                    alert(result.message || 'Failed to save driver');
+                }
+            } catch (error) {
+                console.error('Error saving driver:', error);
+                alert('Server error. Please try again.');
+            }
+        }
+
+        // Delete Driver
+        function deleteDriver(driverId) {
+            driverToDelete = driverId;
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        // Close Delete Modal
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+            driverToDelete = null;
+        }
+
+        // Confirm Delete
+        async function confirmDelete() {
+            if (!driverToDelete) return;
+
+            try {
+                const response = await fetch(`http://localhost:5000/drivers/${driverToDelete}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Driver deleted successfully!');
+                    closeDeleteModal();
+                    fetchDrivers();
+                    // Refresh attendance list to remove deleted driver
+                    loadDrivers();
+                    renderEmployeeList();
+                    // Refresh dashboard stats
+                    fetchDashboardStats();
+                } else {
+                    alert(result.message || 'Failed to delete driver');
+                }
+            } catch (error) {
+                console.error('Error deleting driver:', error);
+                alert('Server error. Please try again.');
+            }
+        }
+
+        // Format time from timestamp
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+            });
+        }
+
+        // Documents & Renewals Functions
+        let licenseToDelete = null;
+        let rcToDelete = null;
+
+        // Test Documents Section
+        function testDocumentsSection() {
+            console.log('Testing Documents & Renewals section...');
+            alert('Documents section test clicked!');
+            
+            const documentsSection = document.getElementById('documents-section');
+            console.log('Documents section element:', documentsSection);
+            
+            if (documentsSection) {
+                console.log('Documents section found, current display:', documentsSection.style.display);
+                documentsSection.style.display = 'block';
+                console.log('Documents section made visible');
+                alert('Documents section is now visible!');
+            } else {
+                console.error('Documents section not found');
+                alert('Documents section not found!');
+            }
+        }
+
+        // Show Documents Section
+        function showDocumentsSection() {
+            console.log('Showing Documents & Renewals section...');
+            
+            // Ensure the section is visible
+            const documentsSection = document.getElementById('documents-section');
+            if (documentsSection) {
+                documentsSection.style.display = 'block';
+                console.log('Documents section made visible');
+                
+                // Initialize with default content even if backend fails
+                initializeDocumentsContent();
+            } else {
+                console.error('Documents section not found');
+            }
+        }
+
+        // Initialize Documents Content with fallback UI
+        function initializeDocumentsContent() {
+            console.log('Initializing Documents content...');
+            
+            // Ensure tables have content even if backend fails
+            const licenseTableBody = document.getElementById('licenseTableBody');
+            const rcTableBody = document.getElementById('rcTableBody');
+            
+            if (licenseTableBody && licenseTableBody.innerHTML.trim() === '') {
+                licenseTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No license renewals found. Click "Add License Renewal" to get started.</td></tr>';
+            }
+            
+            if (rcTableBody && rcTableBody.innerHTML.trim() === '') {
+                rcTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No RC renewals found. Click "Add RC Renewal" to get started.</td></tr>';
+            }
+            
+            // Try to load data from backend (but don't fail if it doesn't work)
+            try {
+                fetchLicenseRenewals();
+            } catch (error) {
+                console.log('Backend not available, showing fallback UI');
+            }
+        }
+
+        // Tab switching function
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Load data based on tab
+            if (tabName === 'license-renewals') {
+                fetchLicenseRenewals();
+            } else if (tabName === 'rc-renewals') {
+                fetchRCRenewals();
+            }
+        }
+
+        // Fetch license renewals
+        async function fetchLicenseRenewals() {
+            console.log('Fetching license renewals...');
+            const licenseTableBody = document.getElementById('licenseTableBody');
+            
+            // Show loading state
+            if (licenseTableBody) {
+                licenseTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Loading license renewals...</td></tr>';
+            }
+            
+            try {
+                const response = await fetch('http://localhost:5000/license-renewals');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('License renewals response:', result);
+                
+                if (result.success) {
+                    displayLicenseRenewals(result.data);
+                } else {
+                    console.error('Failed to fetch license renewals:', result.message);
+                    // Show fallback empty state
+                    if (licenseTableBody) {
+                        licenseTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No license renewals found. Click "Add License Renewal" to get started.</td></tr>';
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching license renewals:', error);
+                // Show fallback empty state (not error, since backend might not be running)
+                if (licenseTableBody) {
+                    licenseTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No license renewals found. Click "Add License Renewal" to get started.</td></tr>';
+                }
+            }
+        }
+
+        // Display license renewals in table
+        function displayLicenseRenewals(licenseRenewals) {
+            const licenseTableBody = document.getElementById('licenseTableBody');
+            licenseTableBody.innerHTML = '';
+
+            if (licenseRenewals.length === 0) {
+                licenseTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No license renewals found</td></tr>';
+                return;
+            }
+
+            licenseRenewals.forEach(renewal => {
+                const row = document.createElement('tr');
+                const daysLeftClass = renewal.daysLeft < 0 ? 'danger' : renewal.daysLeft <= 30 ? 'warning' : 'safe';
+                const statusClass = renewal.status.toLowerCase().replace(' ', '-');
+                
+                row.innerHTML = `
+                    <td>${renewal.driverName}</td>
+                    <td>${renewal.licenseNumber}</td>
+                    <td>${new Date(renewal.expiryDate).toLocaleDateString()}</td>
+                    <td><span class="days-left ${daysLeftClass}">${renewal.daysLeft}</span></td>
+                    <td><span class="status-badge ${statusClass}">${renewal.status}</span></td>
+                    <td>
+                        ${renewal.licenseFile ? 
+                            `<div class="file-actions">
+                                <a href="http://localhost:5000/uploads/${renewal.licenseFile}" class="file-link" target="_blank">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                                <a href="http://localhost:5000/uploads/${renewal.licenseFile}" class="file-link download-link" download>
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                            </div>` : 
+                            '<span class="no-file">No file uploaded</span>'
+                        }
+                    </td>
+                    <td>
+                        <div class="driver-actions">
+                            <button class="btn btn-edit" onclick="editLicenseRenewal('${renewal._id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-delete" onclick="deleteLicenseRenewal('${renewal._id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </td>
+                `;
+                licenseTableBody.appendChild(row);
+            });
+        }
+
+        // Fetch RC renewals
+        async function fetchRCRenewals() {
+            console.log('Fetching RC renewals...');
+            const rcTableBody = document.getElementById('rcTableBody');
+            
+            // Show loading state
+            if (rcTableBody) {
+                rcTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Loading RC renewals...</td></tr>';
+            }
+            
+            try {
+                const response = await fetch('http://localhost:5000/rc-renewals');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('RC renewals response:', result);
+                
+                if (result.success) {
+                    displayRCRenewals(result.data);
+                } else {
+                    console.error('Failed to fetch RC renewals:', result.message);
+                    // Show fallback empty state
+                    if (rcTableBody) {
+                        rcTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No RC renewals found. Click "Add RC Renewal" to get started.</td></tr>';
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching RC renewals:', error);
+                // Show fallback empty state (not error, since backend might not be running)
+                if (rcTableBody) {
+                    rcTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No RC renewals found. Click "Add RC Renewal" to get started.</td></tr>';
+                }
+            }
+        }
+
+        // Display RC renewals in table
+        function displayRCRenewals(rcRenewals) {
+            const rcTableBody = document.getElementById('rcTableBody');
+            rcTableBody.innerHTML = '';
+
+            if (rcRenewals.length === 0) {
+                rcTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No RC renewals found</td></tr>';
+                return;
+            }
+
+            rcRenewals.forEach(renewal => {
+                const row = document.createElement('tr');
+                const daysLeftClass = renewal.daysLeft < 0 ? 'danger' : renewal.daysLeft <= 30 ? 'warning' : 'safe';
+                const statusClass = renewal.status.toLowerCase().replace(' ', '-');
+                
+                row.innerHTML = `
+                    <td>${renewal.vehicleNumber}</td>
+                    <td>${renewal.rcNumber}</td>
+                    <td>${new Date(renewal.expiryDate).toLocaleDateString()}</td>
+                    <td><span class="days-left ${daysLeftClass}">${renewal.daysLeft}</span></td>
+                    <td><span class="status-badge ${statusClass}">${renewal.status}</span></td>
+                    <td>
+                        ${renewal.rcFile ? 
+                            `<div class="file-actions">
+                                <a href="http://localhost:5000/uploads/${renewal.rcFile}" class="file-link" target="_blank">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                                <a href="http://localhost:5000/uploads/${renewal.rcFile}" class="file-link download-link" download>
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                            </div>` : 
+                            '<span class="no-file">No file uploaded</span>'
+                        }
+                    </td>
+                    <td>
+                        <div class="driver-actions">
+                            <button class="btn btn-edit" onclick="editRCRenewal('${renewal._id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-delete" onclick="deleteRCRenewal('${renewal._id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </td>
+                `;
+                rcTableBody.appendChild(row);
+            });
+        }
+
+        // Load drivers for license modal
+        async function loadDriversForLicenseModal() {
+            try {
+                const response = await fetch('http://localhost:5000/drivers');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const select = document.getElementById('licenseDriverId');
+                    select.innerHTML = '<option value="">Select Driver</option>';
+                    
+                    result.data.forEach(driver => {
+                        const option = document.createElement('option');
+                        option.value = driver._id;
+                        option.textContent = driver.name;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading drivers:', error);
+            }
+        }
+
+        // Open License Modal
+        function openLicenseModal() {
+            document.getElementById('licenseModalTitle').textContent = 'Add License Renewal';
+            document.getElementById('licenseForm').reset();
+            document.getElementById('licenseId').value = '';
+            loadDriversForLicenseModal();
+            document.getElementById('licenseModal').classList.add('active');
+        }
+
+        // Close License Modal
+        function closeLicenseModal() {
+            document.getElementById('licenseModal').classList.remove('active');
+        }
+
+        // Save License Renewal
+        async function saveLicenseRenewal() {
+            const licenseId = document.getElementById('licenseId').value;
+            const driverId = document.getElementById('licenseDriverId').value;
+            const licenseNumber = document.getElementById('licenseNumber').value;
+            const expiryDate = document.getElementById('licenseExpiryDate').value;
+            const licenseFile = document.getElementById('licenseFile').files[0];
+
+            if (!driverId || !licenseNumber || !expiryDate) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            // Validate file if selected
+            if (licenseFile) {
+                // Check file size (max 5MB)
+                if (licenseFile.size > 5 * 1024 * 1024) {
+                    alert('File size must be less than 5MB');
+                    return;
+                }
+                
+                // Check file type
+                const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
+                if (!allowedTypes.includes(licenseFile.type)) {
+                    alert('Only PDF, JPG, and PNG files are allowed');
+                    return;
+                }
+            }
+
+            try {
+                // Get driver name
+                const driverResponse = await fetch('http://localhost:5000/drivers');
+                const driverResult = await driverResponse.json();
+                const driver = driverResult.data.find(d => d._id === driverId);
+                const driverName = driver ? driver.name : '';
+
+                // Create FormData for file upload
+                const formData = new FormData();
+                formData.append('driverId', driverId);
+                formData.append('driverName', driverName);
+                formData.append('licenseNumber', licenseNumber);
+                formData.append('expiryDate', expiryDate);
+                
+                // Add file if selected
+                const licenseFileInput = document.getElementById('licenseFile');
+                if (licenseFileInput.files[0]) {
+                    formData.append('licenseFile', licenseFileInput.files[0]);
+                }
+
+                const url = licenseId ? `http://localhost:5000/license-renewals/${licenseId}` : 'http://localhost:5000/license-renewals';
+                const method = licenseId ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method: method,
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(licenseId ? 'License renewal updated successfully!' : 'License renewal created successfully!');
+                    closeLicenseModal();
+                    fetchLicenseRenewals();
+                } else {
+                    alert(result.message || 'Failed to save license renewal');
+                }
+            } catch (error) {
+                console.error('Error saving license renewal:', error);
+                alert('Server error. Please try again.');
+            }
+        }
+
+        // Edit License Renewal
+        async function editLicenseRenewal(licenseId) {
+            try {
+                const response = await fetch('http://localhost:5000/license-renewals');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const renewal = result.data.find(r => r._id === licenseId);
+                    if (renewal) {
+                        document.getElementById('licenseModalTitle').textContent = 'Edit License Renewal';
+                        document.getElementById('licenseId').value = renewal._id;
+                        document.getElementById('licenseNumber').value = renewal.licenseNumber;
+                        document.getElementById('licenseExpiryDate').value = new Date(renewal.expiryDate).toISOString().split('T')[0];
+                        
+                        // Load drivers and set selected driver
+                        await loadDriversForLicenseModal();
+                        document.getElementById('licenseDriverId').value = renewal.driverId;
+                        
+                        document.getElementById('licenseModal').classList.add('active');
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching license renewal:', error);
+            }
+        }
+
+        // Delete License Renewal
+        function deleteLicenseRenewal(licenseId) {
+            licenseToDelete = licenseId;
+            // Show confirmation dialog (you can reuse the existing delete modal)
+            if (confirm('Are you sure you want to delete this license renewal?')) {
+                confirmDeleteLicenseRenewal();
+            }
+        }
+
+        // Confirm Delete License Renewal
+        async function confirmDeleteLicenseRenewal() {
+            if (!licenseToDelete) return;
+
+            try {
+                const response = await fetch(`http://localhost:5000/license-renewals/${licenseToDelete}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('License renewal deleted successfully!');
+                    fetchLicenseRenewals();
+                } else {
+                    alert(result.message || 'Failed to delete license renewal');
+                }
+            } catch (error) {
+                console.error('Error deleting license renewal:', error);
+                alert('Server error. Please try again.');
+            }
+        }
+
+        // Open RC Modal
+        function openRCModal() {
+            document.getElementById('rcModalTitle').textContent = 'Add RC Renewal';
+            document.getElementById('rcForm').reset();
+            document.getElementById('rcId').value = '';
+            document.getElementById('rcModal').classList.add('active');
+        }
+
+        // Close RC Modal
+        function closeRCModal() {
+            document.getElementById('rcModal').classList.remove('active');
+        }
+
+        // Save RC Renewal
+        async function saveRCRenewal() {
+            const rcId = document.getElementById('rcId').value;
+            const vehicleNumber = document.getElementById('rcVehicleNumber').value;
+            const rcNumber = document.getElementById('rcNumber').value;
+            const expiryDate = document.getElementById('rcExpiryDate').value;
+            const rcFile = document.getElementById('rcFile').files[0];
+
+            if (!vehicleNumber || !rcNumber || !expiryDate) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            // Validate file if selected
+            if (rcFile) {
+                // Check file size (max 5MB)
+                if (rcFile.size > 5 * 1024 * 1024) {
+                    alert('File size must be less than 5MB');
+                    return;
+                }
+                
+                // Check file type
+                const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
+                if (!allowedTypes.includes(rcFile.type)) {
+                    alert('Only PDF, JPG, and PNG files are allowed');
+                    return;
+                }
+            }
+
+            try {
+                // Create FormData for file upload
+                const formData = new FormData();
+                formData.append('vehicleNumber', vehicleNumber);
+                formData.append('rcNumber', rcNumber);
+                formData.append('expiryDate', expiryDate);
+                
+                // Add file if selected
+                const rcFileInput = document.getElementById('rcFile');
+                if (rcFileInput.files[0]) {
+                    formData.append('rcFile', rcFileInput.files[0]);
+                }
+
+                const url = rcId ? `http://localhost:5000/rc-renewals/${rcId}` : 'http://localhost:5000/rc-renewals';
+                const method = rcId ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method: method,
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(rcId ? 'RC renewal updated successfully!' : 'RC renewal created successfully!');
+                    closeRCModal();
+                    fetchRCRenewals();
+                } else {
+                    alert(result.message || 'Failed to save RC renewal');
+                }
+            } catch (error) {
+                console.error('Error saving RC renewal:', error);
+                alert('Server error. Please try again.');
+            }
+        }
+
+        // Edit RC Renewal
+        async function editRCRenewal(rcId) {
+            try {
+                const response = await fetch('http://localhost:5000/rc-renewals');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const renewal = result.data.find(r => r._id === rcId);
+                    if (renewal) {
+                        document.getElementById('rcModalTitle').textContent = 'Edit RC Renewal';
+                        document.getElementById('rcId').value = renewal._id;
+                        document.getElementById('rcVehicleNumber').value = renewal.vehicleNumber;
+                        document.getElementById('rcNumber').value = renewal.rcNumber;
+                        document.getElementById('rcExpiryDate').value = new Date(renewal.expiryDate).toISOString().split('T')[0];
+                        document.getElementById('rcModal').classList.add('active');
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching RC renewal:', error);
+            }
+        }
+
+        // Delete RC Renewal
+        function deleteRCRenewal(rcId) {
+            rcToDelete = rcId;
+            if (confirm('Are you sure you want to delete this RC renewal?')) {
+                confirmDeleteRCRenewal();
+            }
+        }
+
+        // Confirm Delete RC Renewal
+        async function confirmDeleteRCRenewal() {
+            if (!rcToDelete) return;
+
+            try {
+                const response = await fetch(`http://localhost:5000/rc-renewals/${rcToDelete}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('RC renewal deleted successfully!');
+                    fetchRCRenewals();
+                } else {
+                    alert(result.message || 'Failed to delete RC renewal');
+                }
+            } catch (error) {
+                console.error('Error deleting RC renewal:', error);
+                alert('Server error. Please try again.');
+            }
+        }
+
+        // View File (placeholder function)
+        function viewFile(filePath) {
+            alert('File viewing functionality would be implemented here. File: ' + filePath);
+        }
+
+        // Message Management Functions
+        
+        // Update message badges with unread count
+        function updateMessageBadges(unreadCount) {
+            const sidebarBadge = document.getElementById('sidebarMessagesBadge');
+            const headerBadge = document.getElementById('headerMessagesBadge');
+            
+            if (sidebarBadge) {
+                sidebarBadge.textContent = unreadCount;
+                sidebarBadge.style.display = unreadCount > 0 ? 'inline-block' : 'none';
+            }
+            
+            if (headerBadge) {
+                headerBadge.textContent = unreadCount + (unreadCount === 1 ? ' New' : ' New');
+                headerBadge.style.display = unreadCount > 0 ? 'inline-block' : 'none';
+            }
+        }
+
+        // Fetch messages from backend
+        async function fetchMessages() {
+    console.log("Fetching messages from backend...");
+    try {
+        const response = await fetch("http://localhost:5000/messages");
+        console.log("Response status:", response.status);
+        
+        const result = await response.json();
+        console.log("API response:", result);
+
+        const container = document.getElementById("messagesContainer");
+        const noMsg = document.getElementById("noMessagesMessage");
+
+        if (!container) {
+            console.error("messagesContainer not found");
+            return;
+        }
+
+        container.innerHTML = "";
+
+        if (!result.success || result.data.length === 0) {
+            console.log("No messages found or API error");
+            if (noMsg) noMsg.style.display = "block";
+            return;
+        }
+
+        console.log(`Found ${result.data.length} messages`);
+        if (noMsg) noMsg.style.display = "none";
+
+        container.innerHTML = result.data.map(msg => {
+  const isRead = msg.isRead || false;
+  
+  // FIX 2 — SAFE RENDER (PREVENT CRASH)
+  const fullName = `${msg.firstName || ""} ${msg.lastName || ""}`.trim() || "No Name";
+  const messageText = msg.inquiries || "No message";
+  const location = `${msg.city || ""} ${msg.state || ""}`.trim();
+  
+  return `
+  <div class="message-card" style="
+    background: ${isRead ? 'var(--bg-color)' : 'var(--card-bg)'};
+    border: 1px solid var(--border-color);
+    border-left: 4px solid ${isRead ? 'var(--secondary-text)' : 'var(--primary-color)'};
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+    position: relative;
+    cursor: ${!isRead ? 'pointer' : 'default'};
+  "
+  onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)';"
+  onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)';"
+  >
+    <div class="message-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        ${!isRead ? '<span style="background: var(--primary-color); color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold;">NEW</span>' : ''}
+        <h3 style="margin: 0; color: ${isRead ? 'var(--secondary-text)' : 'var(--heading-color)'}; font-size: 18px;">${fullName}</h3>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <small style="color: var(--secondary-text); font-size: 12px;">${new Date(msg.createdAt).toLocaleString()}</small>
+        ${!isRead ? `
+          <button 
+            onclick="console.log('Marking ID:', '${msg._id}'); markAsRead('${msg._id}')" 
+            style="
+              background: var(--primary-color); 
+              color: white; 
+              border: none; 
+              padding: 4px 12px; 
+              border-radius: 4px; 
+              cursor: pointer; 
+              font-size: 12px;
+              transition: all 0.2s ease;
+            "
+            onmouseover="this.style.background='var(--hover-color)'"
+            onmouseout="this.style.background='var(--primary-color)'"
+          >
+            Mark as Read
+          </button>
+        ` : '<span style="color: var(--success-color); font-size: 12px; font-weight: bold;">✓ Read</span>'}
+      </div>
+    </div>
+
+    <div style="color: ${isRead ? 'var(--secondary-text)' : 'var(--text-color)'};">
+      <p style="margin: 8px 0;"><strong>Email:</strong> ${msg.email || "N/A"}</p>
+      <p style="margin: 8px 0;"><strong>Phone:</strong> ${msg.phone || "N/A"}</p>
+      <p style="margin: 8px 0;"><strong>Location:</strong> ${location || "N/A"}</p>
+      <p style="margin: 15px 0 0 0; line-height: 1.5;">${messageText}</p>
+    </div>
+  </div>
+`;
+}).join("");
+
+        console.log("Messages rendered successfully");
+
+    } catch (error) {
+        console.error("Error fetching messages:", error);
+        const container = document.getElementById("messagesContainer");
+        if (container) {
+            container.innerHTML = '<p style="color: var(--danger-color); text-align: center; padding: 20px;">Error loading messages. Please try again.</p>';
+        }
+    }
+}
+
+        // Mark message as read
+        async function markAsRead(messageId) {
+            // FIX 3 — MARK AS READ (REAL ISSUE CHECK)
+            console.log("Marking ID:", messageId);
+            
+            if (!messageId) {
+                console.error("❌ No messageId provided - this will cause API to fail");
+                return;
+            }
+            
+            try {
+                // FIX 4 — ENSURE CORRECT FETCH
+                const response = await fetch(`http://localhost:5000/messages/${messageId}/read`, {
+                    method: "PUT"
+                });
+                
+                const result = await response.json();
+                console.log("Mark as read response:", result);
+                
+                if (result.success) {
+                    console.log("Message marked as read successfully, refreshing UI...");
+                    // Refresh messages to show updated state
+                    await fetchMessages();
+                    console.log("Messages refreshed, now updating dashboard stats...");
+                    // Refresh dashboard stats to update message count
+                    await fetchDashboardStats();
+                    console.log("Dashboard stats updated successfully");
+                } else {
+                    console.error("Failed to mark message as read:", result.message);
+                }
+            } catch (error) {
+                console.error("Error marking message as read:", error);
+            }
+        }
+
+        // Display messages in the container
+        function displayMessages(messages) {
+            const container = document.getElementById('messagesContainer');
+            
+            if (!container) return;
+            
+            if (messages.length === 0) {
+                container.innerHTML = '<p>No messages found</p>';
+                return;
+            }
+            
+            container.innerHTML = messages.map(msg => {
+                const fullName = `${msg.firstName || ""} ${msg.lastName || ""}`.trim() || "No Name";
+                const messageText = msg.inquiries || "No message";
+                const location = `${msg.city || ""} ${msg.state || ""}`.trim();
+                
+                return `
+                <div class="message-card">
+                    <h4>${fullName}</h4>
+                    <p><strong>Email:</strong> ${msg.email || "N/A"}</p>
+                    <p><strong>Phone:</strong> ${msg.phone || "N/A"}</p>
+                    <p><strong>Location:</strong> ${location || "N/A"}</p>
+                    <p>${messageText}</p>
+                    <small>${new Date(msg.createdAt).toLocaleString()}</small>
+                </div>
+            `;
+            }).join('');
+        }
+
+        // Create a message item element
+        function createMessageItem(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message-item';
+            if (!message.isRead) {
+                messageDiv.className += ' unread';
+            }
+            
+            const fullName = `${message.firstName} ${message.lastName || ''}`.trim();
+            const location = message.city ? `${message.city}, ${message.state}` : message.state;
+            const createdDate = new Date(message.createdAt);
+            const formattedDate = createdDate.toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            messageDiv.innerHTML = `
+                <div class="message-header">
+                    <div class="message-sender">${fullName}</div>
+                    <div class="message-date">${formattedDate}</div>
+                </div>
+                <div class="message-subject">${message.companyName} - ${message.jobTitle || 'N/A'}</div>
+                <div class="message-content">
+                    <strong>Inquiries:</strong> ${message.inquiries}
+                </div>
+                <div class="message-details">
+                    <div class="detail-row">
+                        <strong>Email:</strong> ${message.email}
+                    </div>
+                    <div class="detail-row">
+                        <strong>Phone:</strong> ${message.phone}
+                    </div>
+                    <div class="detail-row">
+                        <strong>Location:</strong> ${location}
+                    </div>
+                    <div class="detail-row">
+                        <strong>Source:</strong> ${message.source}
+                    </div>
+                </div>
+                <div class="message-actions">
+                    ${!message.isRead ? `<button class="btn-mark-read" onclick="markAsRead('${message._id}')">Mark as Read</button>` : ''}
+                </div>
+            `;
+            
+            return messageDiv;
+        }
+
+        // Mark message as read
+        async function markAsRead(messageId) {
+            try {
+                const response = await fetch(`http://localhost:5000/messages/${messageId}/read`, {
+                    method: 'PUT'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Refresh messages and stats
+                    fetchMessages();
+                    fetchDashboardStats();
+                } else {
+                    alert('Failed to mark message as read');
+                }
+            } catch (error) {
+                console.error('Error marking message as read:', error);
+                alert('Server error. Please try again.');
+            }
+        }
+
+        // Initialize dashboard on load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            const isLoggedIn = localStorage.getItem("adminLoggedIn");
+            if (isLoggedIn !== "true") {
+                // Redirect to login page if not authenticated
+                window.location.href = "loginpage.html";
+                return;
+            }
+            
+            showSection('dashboard');
+            
+            // Fetch dashboard statistics
+            fetchDashboardStats();
+            
+            // Fetch messages
+            fetchMessages();
+            
+            // Fetch drivers
+            fetchDrivers();
+            
+            // Initialize mobile sidebar state - hidden by default on mobile
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('mobile-visible');
+            }
+        });
+
+        // Initialize attendance on page load
+        window.onload = () => {
+            initializeAttendance();
+        };
+    </script>
+</body>
+</html>

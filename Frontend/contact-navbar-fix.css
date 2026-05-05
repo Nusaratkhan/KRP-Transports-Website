@@ -1,0 +1,79 @@
+/* NAVBAR FIXES - Override duplicate CSS rules */
+
+/* Logo Title - Force home page styles */
+.logo-title h1 {
+  font-size: 23px !important;
+  font-weight: 600 !important;
+  font-family: 'Raleway', sans-serif !important;
+  color: #a5170d !important;
+  transition: font-size 0.3s ease;
+}
+
+.navbar.shrink .logo-title h1 {
+  font-size: 18px !important;
+  font-weight: 900 !important;
+}
+
+/* Logo Image - Force home page size */
+.logo-title img {
+  width: 50px !important;
+  height: 30px !important;
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.navbar.shrink .logo-title img {
+  width: 50px !important;
+  height: 30px !important;
+}
+
+/* Navigation Links - Force home page styles */
+.nav-links {
+  list-style: none !important;
+  display: flex !important;
+  gap: 30px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.nav-links li a {
+  text-decoration: none !important;
+  color: #053047 !important;
+  font-size: 15px !important;
+  transition: all 0.3s ease !important;
+  font-weight: 400 !important;
+  position: relative !important;
+}
+
+.nav-links li a:hover {
+  color: #c71305 !important;
+}
+
+.nav-links li a.active {
+  color: #c71305 !important;
+  font-weight: 600 !important;
+}
+
+.nav-links li a::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: -5px !important;
+  left: 0 !important;
+  width: 0 !important;
+  height: 2px !important;
+  background-color: #c71305 !important;
+  transition: width 0.3s ease !important;
+}
+
+.nav-links li a:hover::after,
+.nav-links li a.active::after {
+  width: 100% !important;
+}
+
+.nav-links li a:hover {
+  color: #c71305 !important;
+}
+
+.nav-links li a.active {
+  color: #c71305 !important;
+  font-weight: 600 !important;
+}
