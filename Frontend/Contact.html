@@ -353,6 +353,7 @@
 <button id="scrollToTop" class="scroll-to-top" aria-label="Scroll to top">
   <i class="fas fa-arrow-up"></i>
 </button>
+<script src="api-config.js"></script>
 <script>
 document.getElementById("apl-custom-form").addEventListener("submit", async function(e){
   e.preventDefault();
@@ -369,7 +370,7 @@ document.getElementById("apl-custom-form").addEventListener("submit", async func
   const state = data.state || '';
   const inquiries = data.inquiries || '';
 
-  const res = await fetch("http://localhost:5000/contact", {
+  const res = await fetch(`${API_URL}/contact`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
