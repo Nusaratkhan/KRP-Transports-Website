@@ -116,15 +116,14 @@
       <h1>TRANSPORTS</h1>
     </div>
 
-    <div class="nav-right">
-      <div class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle mobile menu" tabindex="0">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
+   <div class="mobile-menu-toggle" onclick="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
       
       <ul class="nav-links" role="navigation" aria-label="Main navigation">
-        <li><a href="index.html" onclick="closeMobileMenu()" aria-label="Navigate to Home page">Home</a></li>
+        <li><a href="index.html" aria-label="Navigate to Home page">Home</a></li>
         <li><a href="about.html" onclick="closeMobileMenu()" aria-label="Navigate to About section">About</a></li>
         <li><a href="services.html" onclick="closeMobileMenu()" aria-label="Navigate to Services section">Services</a></li>
         <li><a href="Contact.html" onclick="closeMobileMenu()" aria-label="Navigate to Contact section" class="active">Contact</a></li>
@@ -132,7 +131,7 @@
       </ul>
       
       <!-- Dark/Light Mode Toggle -->
-      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark/light mode">
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark/light mode" onclick="toggleTheme()">
         <span class="theme-icon">
           <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
@@ -150,10 +149,6 @@
           </svg>
         </span>
       </button>
-
-      </div>
-    </div>
-  </div>
 
       <!-- <div id="google_translate_element"></div> -->
       </div>
